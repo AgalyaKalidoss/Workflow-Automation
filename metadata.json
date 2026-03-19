@@ -1,0 +1,5 @@
+{
+  "name": "Workflow Automation Engine",
+  "description": "A full-stack workflow automation engine with a rules engine, execution tracking, and a modern dark dashboard.",
+  "requestFramePermissions": []
+}
