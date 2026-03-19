@@ -6,7 +6,6 @@ import cors from 'cors';
 import { Workflow, Step, Rule, Execution } from './models.js';
 import { evaluateCondition } from './src/services/workflowEngine.js';
 import mongoose from 'mongoose';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,8 +16,7 @@ async function startServer() {
   console.log("MongoDB Connected");
 
   const app = express();
-  const PORT = 3000;
-
+const PORT = process.env.PORT || 3000;
   app.use(cors());
   app.use(express.json());
   // --- Workflows API ---
