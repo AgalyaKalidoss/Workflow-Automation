@@ -9,26 +9,51 @@ import mongoose from 'mongoose';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
 async function startServer() {
+  try {
+    // ✅ Connect to MongoDB with proper options
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-  // ✅ Connect to MongoDB ONLY ONCE
-  await mongoose.connect(process.env.MONGO_URI)
-  console.log("MongoDB Connected");
+    console.log("MongoDB Connected");
 
-  const app = express();
-  const PORT = 3000;
-  app.use(cors());
-  app.use(express.json());
-  // --- Workflows API ---
-  app.post('/api/workflows', async (req, res) => {
-    try {
-      const workflow = new Workflow(req.body);
-      await workflow.save();
-      res.status(201).json(workflow);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+    const app = express();
+
+    // ✅ IMPORTANT: Use dynamic port for Render
+    const PORT = process.env.PORT || 3000;
+
+    app.use(cors());
+    app.use(express.json());
+
+    // --- Workflows API ---
+    app.post('/api/workflows', async (req, res) => {
+      try {
+        const workflow = new Workflow(req.body);
+        await workflow.save();
+        res.status(201).json(workflow);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    // ✅ Start server AFTER DB connects
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+
+  } catch (error) {
+    console.error("MongoDB Connection Error:", error);
+  }
+}
+
+// ✅ Call the function
+startServer();
 
   app.get('/api/workflows', async (req, res) => {
     try {
