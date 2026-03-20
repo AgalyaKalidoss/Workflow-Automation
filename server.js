@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
 
   // ✅ Connect to MongoDB ONLY ONCE
-  await mongoose.connect("mongodb://127.0.0.1:27017/workflowDB");
+  await mongoose.connect(process.env.MONGO_URI)
   console.log("MongoDB Connected");
 
   const app = express();
